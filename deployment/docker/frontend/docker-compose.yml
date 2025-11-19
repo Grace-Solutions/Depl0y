@@ -19,6 +19,8 @@ services:
     logging:
       driver: 'local'
     #env_file: '.env'
+    environment:
+      BACKEND_BASEURL: '${BACKEND_BASEURL:-http://backend:8000}'
     networks:
       EXTERNAL:
     ports:

@@ -8,7 +8,8 @@ ENV APP_VERSION=${APP_VERSION}
 COPY src/frontend/dist /usr/share/nginx/html
 
 # Custom nginx config for SPA routing (serve index.html for unknown routes)
-COPY deployment/docker/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+# Use nginx's built-in template support to env-substitute BACKEND_BASEURL
+COPY deployment/docker/frontend/nginx.conf /etc/nginx/templates/default.conf.template
 
 EXPOSE 80
 
