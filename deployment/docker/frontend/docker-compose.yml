@@ -1,0 +1,33 @@
+name: '${STACK_NAME:-stk-depl0y-frontend-001}'
+
+networks:
+  EXTERNAL:
+    name: DEPL0Y-FRONTEND-EXTERNAL
+    driver: bridge
+    internal: false
+    attachable: true
+
+services:
+  Frontend:
+    image: '${FRONTEND_IMAGENAME:-Agit8or/Depl0y-frontend}:${FRONTEND_IMAGEVERSION:-latest}'
+    container_name: DEPL0Y-FRONTEND-001
+    hostname: DEPL0Y-FRONTEND-001
+    restart: unless-stopped
+    stop_signal: SIGTERM
+    stop_grace_period: 90s
+    user: '${UID:-0}:${GID:-0}'
+    logging:
+      driver: 'local'
+    #env_file: '.env'
+    networks:
+      EXTERNAL:
+    ports:
+      - "${SERVICE_BIND_ADDRESS_EXTERNAL:-0.0.0.0}:${FRONTEND_PORT_EXTERNAL:-8080}:80"
+    dns:
+      - '${DNSSERVER:-127.0.0.53}'
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      com.centurylinklabs.watchtower.enable: ${FRONTEND_ENABLEAUTOMATICUPDATES:-true}
+

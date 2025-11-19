@@ -1,0 +1,59 @@
+name: '${STACK_NAME:-stk-depl0y-backend-001}'
+
+networks:
+  EXTERNAL:
+    name: DEPL0Y-BACKEND-EXTERNAL
+    driver: bridge
+    internal: false
+    attachable: true
+
+  INTERNAL:
+    name: DEPL0Y-BACKEND-INTERNAL
+    driver: bridge
+    internal: true
+    attachable: true
+
+services:
+  Backend:
+    image: '${BACKEND_IMAGENAME:-Agit8or/Depl0y-backend}:${BACKEND_IMAGEVERSION:-latest}'
+    container_name: DEPL0Y-BACKEND-001
+    hostname: DEPL0Y-BACKEND-001
+    restart: unless-stopped
+    stop_signal: SIGTERM
+    stop_grace_period: 90s
+    user: '${UID:-0}:${GID:-0}'
+    logging:
+      driver: 'local'
+    #env_file: '.env'
+    environment:
+      SECRET_KEY: '${SECRET_KEY:-changeme}'
+      ENCRYPTION_KEY: '${ENCRYPTION_KEY:-changeme}'
+      LOG_LEVEL: '${LOG_LEVEL:-INFO}'
+      DATABASE_URL: '${DATABASE_URL:-sqlite:////var/lib/depl0y/db/depl0y.db}'
+      ISO_STORAGE_PATH: '${ISO_STORAGE_PATH:-/var/lib/depl0y/isos}'
+      UPLOAD_DIR: '${UPLOAD_DIR:-/var/lib/depl0y}'
+      CLOUDINIT_TEMPLATE_PATH: '${CLOUDINIT_TEMPLATE_PATH:-/var/lib/depl0y/cloud-init}'
+      SSH_KEY_PATH: '${SSH_KEY_PATH:-/var/lib/depl0y/ssh_keys}'
+      LOG_FILE: '${LOG_FILE:-/var/log/depl0y/app.log}'
+      APPLICATION_PORT_INTERNAL: '${APPLICATION_PORT_INTERNAL:-8080}'
+      ADMIN_USERNAME: '${ADMIN_USERNAME:-admin}'
+      ADMIN_PASSWORD: '${ADMIN_PASSWORD:-admin}'
+    networks:
+      INTERNAL:
+      EXTERNAL:
+    ports:
+      - "${SERVICE_BIND_ADDRESS_EXTERNAL:-0.0.0.0}:${BACKEND_PORT_EXTERNAL:-8081}:${APPLICATION_PORT_INTERNAL:-8080}"
+    dns:
+      - '${DNSSERVER:-127.0.0.53}'
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/Data:/var/lib/depl0y:rw"
+      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/Logs:/var/log/depl0y:rw"
+      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/CloudInit:/var/lib/depl0y/cloud-init:rw"
+      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/SSHKeys:/var/lib/depl0y/ssh_keys:rw"
+      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/ISOs:/var/lib/depl0y/isos:rw"
+      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/CloudImages:/var/lib/depl0y/cloud-images:rw"
+    labels:
+      com.centurylinklabs.watchtower.enable: ${BACKEND_ENABLEAUTOMATICUPDATES:-true}
+

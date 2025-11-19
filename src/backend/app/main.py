@@ -2,7 +2,8 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 from app.core.database import init_db
 from app.api import auth, users, proxmox, vms, isos, cloud_images, updates, dashboard, bug_report, logs, docs, setup, system_updates, ha, system
@@ -39,6 +40,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+FRONTEND_INDEX = os.path.join(settings.FRONTEND_DIST_PATH, "index.html")
+FRONTEND_ASSETS_DIR = os.path.join(settings.FRONTEND_DIST_PATH, "assets")
+
+if os.path.isdir(settings.FRONTEND_DIST_PATH):
+    if os.path.isdir(FRONTEND_ASSETS_DIR):
+        app.mount(
+            "/assets",
+            StaticFiles(directory=FRONTEND_ASSETS_DIR),
+            name="assets",
+        )
+    else:
+        logger.warning(
+            "Frontend assets directory '%s' not found; static assets will not be served.",
+            FRONTEND_ASSETS_DIR,
+        )
+else:
+    logger.warning(
+        "Frontend dist path '%s' does not exist; UI will not be served.",
+        settings.FRONTEND_DIST_PATH,
+    )
+
 
 # Add validation error handler for debugging
 @app.exception_handler(RequestValidationError)
@@ -65,13 +87,20 @@ async def startup_event():
     logger.info("Database initialized")
 
 
-@app.get("/")
+@app.get("/", include_in_schema=False, response_class=FileResponse)
 async def root():
-    """Root endpoint"""
+    """Serve frontend SPA index.html or fallback to JSON status."""
+    if os.path.exists(FRONTEND_INDEX):
+        return FileResponse(FRONTEND_INDEX)
+    logger.warning(
+        "Frontend index '%s' not found; returning JSON status instead.",
+        FRONTEND_INDEX,
+    )
     return {
         "name": settings.APP_NAME,
         "version": settings.APP_VERSION,
         "status": "running",
+        "detail": "Frontend assets not found; API is running but UI is unavailable.",
     }
 
 

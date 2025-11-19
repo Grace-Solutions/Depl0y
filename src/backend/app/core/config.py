@@ -5,26 +5,33 @@ import os
 
 
 def get_app_version():
-    """Get application version from database or fallback to default"""
+    """Get application version from env, database, or fallback to default."""
+    # 1) Prefer explicit APP_VERSION env var (e.g. from Docker image build)
+    env_version = os.getenv("APP_VERSION")
+    if env_version:
+        return env_version
+
+    # 2) Attempt to read from system_settings table in the database
     try:
         import sqlite3
         db_path = os.getenv("DATABASE_URL", "sqlite:////var/lib/depl0y/db/depl0y.db")
         # Extract path from sqlite URL
         if db_path.startswith("sqlite:///"):
             db_path = db_path.replace("sqlite:///", "")
-        
+
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT value FROM system_settings WHERE key = 'app_version'")
         result = cursor.fetchone()
         conn.close()
-        
+
         if result:
             return result[0]
-    except Exception as e:
+    except Exception:
         # Fallback to hardcoded version if database query fails
         pass
-    
+
+    # 3) Final fallback to baked-in default
     return "1.1.9"
 
 
@@ -92,6 +99,9 @@ class Settings(BaseSettings):
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
     LOG_FILE: str = os.getenv("LOG_FILE", "/var/log/depl0y/app.log")
+
+    # Frontend
+    FRONTEND_DIST_PATH: str = os.getenv("FRONTEND_DIST_PATH", "/opt/depl0y/frontend/dist")
 
     class Config:
         case_sensitive = True
