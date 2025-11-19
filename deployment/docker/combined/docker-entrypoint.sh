@@ -2,6 +2,7 @@
 set -e
 
 APP_PORT="${APPLICATION_PORT_INTERNAL:-8080}"
+BACKEND_PORT="${BACKEND_PORT_INTERNAL:-8000}"
 
 # Ensure core data directories exist (may be bind-mounted)
 mkdir -p /var/lib/depl0y/db \
@@ -27,6 +28,9 @@ echo "Ensuring default admin user exists..."
 python /opt/depl0y/backend/init_admin_user.py || echo "Warning: admin user initialization failed"
 echo "Admin user initialization step completed."
 
-echo "Starting Depl0y with uvicorn on port ${APP_PORT}..."
-exec uvicorn app.main:app --host 0.0.0.0 --port "${APP_PORT}"
+echo "Starting Depl0y backend (uvicorn) on port ${BACKEND_PORT} and nginx on port ${APP_PORT}..."
+uvicorn app.main:app --host 127.0.0.1 --port "${BACKEND_PORT}" &
+
+echo "Starting nginx..."
+exec nginx -g "daemon off;"
 

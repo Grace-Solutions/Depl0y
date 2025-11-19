@@ -6,20 +6,21 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     APP_VERSION=${APP_VERSION}
 
-# System dependencies required by the backend (SSH, PDF, etc.)
-RUN apt-get update \ 
-    && apt-get install -y --no-install-recommends \ 
-       build-essential \ 
-       curl \ 
-       wget \ 
-       sshpass \ 
-       openssh-client \ 
-       ca-certificates \ 
-       libpango-1.0-0 \ 
-       libpangocairo-1.0-0 \ 
-       libgdk-pixbuf2.0-0 \ 
-       libffi-dev \ 
-       shared-mime-info \ 
+# System dependencies required by the backend (SSH, PDF, nginx, etc.)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       build-essential \
+       curl \
+       wget \
+       sshpass \
+       openssh-client \
+       ca-certificates \
+       nginx \
+       libpango-1.0-0 \
+       libpangocairo-1.0-0 \
+       libgdk-pixbuf2.0-0 \
+       libffi-dev \
+       shared-mime-info \
     && rm -rf /var/lib/apt/lists/*
 
 # Create application directories
@@ -43,6 +44,7 @@ RUN pip install --no-cache-dir --upgrade pip \
 # Copy backend code and built frontend assets
 COPY src/backend /opt/depl0y/backend
 COPY src/frontend/dist /opt/depl0y/frontend/dist
+COPY deployment/docker/combined/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Default environment values (can be overridden at runtime)
 ENV DATABASE_URL=sqlite:////var/lib/depl0y/db/depl0y.db \ 
