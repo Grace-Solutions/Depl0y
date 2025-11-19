@@ -39,7 +39,20 @@ Depl0y is a free, open-source web-based control panel that simplifies the deploy
 
 ## Screenshots
 
-*Screenshots coming soon*
+Below are example screenshots of the Depl0y interface:
+
+![Screenshot 1](images/ss1.png)
+![Screenshot 2](images/ss2.png)
+![Screenshot 3](images/ss3.png)
+![Screenshot 4](images/ss4.png)
+![Screenshot 5](images/ss5.png)
+![Screenshot 6](images/ss6.png)
+![Screenshot 7](images/ss7.png)
+![Screenshot 8](images/ss8.png)
+![Screenshot 9](images/ss9.png)
+![Screenshot 10](images/ss10.png)
+![Screenshot 11](images/ss11.png)
+![Screenshot 12](images/ss12.png)
 
 ## Quick Start
 
@@ -53,8 +66,8 @@ Depl0y is a free, open-source web-based control panel that simplifies the deploy
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/depl0y.git
-   cd depl0y
+   git clone https://github.com/Grace-Solutions/Depl0y.git
+   cd Depl0y
    ```
 
 2. **Run the setup script**
@@ -78,7 +91,7 @@ Depl0y is a free, open-source web-based control panel that simplifies the deploy
 
 ## Manual Installation
 
-If you prefer manual installation, see [docs/INSTALLATION.md](docs/INSTALLATION.md) for detailed instructions.
+If you prefer manual installation, see [docs/INSTALL.md](docs/INSTALL.md) for detailed instructions.
 
 ## Configuration
 
@@ -169,7 +182,7 @@ The VM will be automatically created with:
 - SSH server enabled
 - Ready to use immediately
 
-📖 **Full guide:** [CLOUD_IMAGES_GUIDE.md](CLOUD_IMAGES_GUIDE.md)
+📖 **Full guide:** [CLOUD_IMAGES_GUIDE.md](docs/CLOUD_IMAGES_GUIDE.md)
 
 ### Deploying a Linux VM (Traditional ISO Method)
 
@@ -213,7 +226,7 @@ The VM will be automatically created with:
 ### Backend Development
 
 ```bash
-cd backend
+cd src/backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -223,7 +236,7 @@ uvicorn app.main:app --reload
 ### Frontend Development
 
 ```bash
-cd frontend
+cd src/frontend
 npm install
 npm run dev
 ```
@@ -251,11 +264,11 @@ After making changes to the code, deploy them to production:
 # Or deploy manually - see DEPLOYMENT.md for details
 ```
 
-📖 **Full deployment guide:** [DEPLOYMENT.md](DEPLOYMENT.md)
+📖 **Full deployment guide:** [DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions! Please see [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -329,8 +342,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 - **Documentation**: [docs/](docs/)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/depl0y/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/depl0y/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Grace-Solutions/Depl0y/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Grace-Solutions/Depl0y/discussions)
 
 ## Author
 
