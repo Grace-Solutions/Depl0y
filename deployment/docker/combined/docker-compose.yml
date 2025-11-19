@@ -50,4 +50,5 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - "${STACK_BINDMOUNTROOT}/${STACK_NAME}/Application/Data:/var/lib/depl0y:rw"
+      - "${STACK_BINDMOUNTROOT}/${STACK_NAME}/Application/Logs:/var/log/depl0y:rw"
 

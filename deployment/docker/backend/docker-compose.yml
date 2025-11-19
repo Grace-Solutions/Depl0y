@@ -49,4 +49,5 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - "${STACK_BINDMOUNTROOT}/${STACK_NAME}/Backend/Data:/var/lib/depl0y:rw"
+      - "${STACK_BINDMOUNTROOT}/${STACK_NAME}/Backend/Logs:/var/log/depl0y:rw"
 
