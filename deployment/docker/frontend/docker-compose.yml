@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
     stop_signal: SIGTERM
     stop_grace_period: 90s
-    user: '${UID:-0}:${GID:-0}'
+    user: '${UID:-0}:${GID:-1000}'
     logging:
       driver: 'local'
     #env_file: '.env'
@@ -30,6 +30,4 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    labels:
-      com.centurylinklabs.watchtower.enable: ${FRONTEND_ENABLEAUTOMATICUPDATES:-true}
 

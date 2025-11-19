@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
     stop_signal: SIGTERM
     stop_grace_period: 90s
-    user: '${UID:-0}:${GID:-0}'
+    user: '${UID:-0}:${GID:-1000}'
     logging:
       driver: 'local'
     #env_file: '.env'
@@ -48,12 +48,5 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/Data:/var/lib/depl0y:rw"
-      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/Logs:/var/log/depl0y:rw"
-      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/CloudInit:/var/lib/depl0y/cloud-init:rw"
-      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/SSHKeys:/var/lib/depl0y/ssh_keys:rw"
-      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/ISOs:/var/lib/depl0y/isos:rw"
-      - "/${STACK_BINDMOUNTROOT:-custom/docker/stacks}/${STACK_NAME:-stk-depl0y-backend-001}/Backend/CloudImages:/var/lib/depl0y/cloud-images:rw"
-    labels:
-      com.centurylinklabs.watchtower.enable: ${BACKEND_ENABLEAUTOMATICUPDATES:-true}
+      - "${STACK_BINDMOUNTROOT}/${STACK_NAME}/Backend/Data:/var/lib/depl0y:rw"
 
